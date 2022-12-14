@@ -43,9 +43,17 @@ class RecipesListView : View() {
 
             column("Title", RecipeListItem::title) {
                 prefWidth = 500.0
+                onDoubleClick {
+                    selectedItem?.title?.let { DetailsView(it).openWindow() }
+                }
             }
+
             column("Category", RecipeListItem::category) {
                 prefWidth = 285.0
+                onDoubleClick {
+                    selectedItem?.title?.let { DetailsView(it).openWindow() }
+                }
+
             }
         }
         addRecipes()

@@ -17,6 +17,7 @@ class MainController() {
                 RecipeListItem(resultRecipe.title, convertListToString(recipeCategory?.dishTypes))
             recipes.add(recipe)
         }
+        recipes.add(RecipeListItem("aaaa", "aaaa"))
         recipes
     }
 
