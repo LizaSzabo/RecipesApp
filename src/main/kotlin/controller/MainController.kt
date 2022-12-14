@@ -20,6 +20,19 @@ class MainController() {
         recipes
     }
 
+    suspend fun getRecipeByCategory(category: String): MutableList<RecipeListItem> = withContext(Dispatchers.IO) {
+        val searchRecipeResult = retrofit.getRecipesByCategory(category).execute().body()
+        val recipes = mutableListOf<RecipeListItem>()
+
+        searchRecipeResult?.results?.sortedBy { it.title }?.forEach { resultRecipe ->
+            val recipeCategory = retrofit.getRecipe(resultRecipe.id).execute().body()
+            val recipe =
+                RecipeListItem(resultRecipe.title, convertListToString(recipeCategory?.dishTypes))
+            recipes.add(recipe)
+        }
+        recipes
+    }
+
     private fun convertListToString(listOfStrings: List<String>?): String {
         return listOfStrings?.toString()?.substringAfter("[")?.substringBefore("]") ?: ""
     }

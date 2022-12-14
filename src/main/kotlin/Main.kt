@@ -1,4 +1,4 @@
-import com.example.demo.view.RecipesListView
+import view.RecipesListView
 import javafx.application.Application
 import tornadofx.*
 

@@ -2,7 +2,6 @@ package network
 
 import com.squareup.moshi.JsonClass
 
-
 @JsonClass(generateAdapter = true)
 data class AnalyzedInstructions1289973165(val name: String?, val steps: List<Steps389317355>?)
 
@@ -44,10 +43,8 @@ data class Base(
     val originalId: Any?
 )
 
-
 @JsonClass(generateAdapter = true)
 data class Equipment743652616(val id: Double?, val name: String?, val localizedName: String?, val image: String?)
-
 
 @JsonClass(generateAdapter = true)
 data class ExtendedIngredients1847277050(
