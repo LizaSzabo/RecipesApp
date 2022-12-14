@@ -6,8 +6,8 @@ import app.Styles.Companion.backgroundBoxColor
 import controller.MainController
 import javafx.application.Platform
 import javafx.scene.control.TableView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import tornadofx.*
 import view.HeaderView
@@ -16,7 +16,7 @@ class RecipesListView : View() {
     private val headerView = find(HeaderView::class)
     private val mainController = MainController()
     private var recipes = mutableListOf<RecipeListItem>()
-    lateinit var tableView: TableView<RecipeListItem>
+    private lateinit var tableView: TableView<RecipeListItem>
 
     override val root = vbox {
         style {
@@ -49,7 +49,7 @@ class RecipesListView : View() {
     }
 
     private fun addRecipes() {
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.Main).launch {
             recipes = mainController.getAllRecipes()
             println(recipes)
             tableView.setData(recipes)

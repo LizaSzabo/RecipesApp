@@ -3,11 +3,24 @@ package controller
 import RecipeListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import network.retrofit
 
 
 class MainController() {
-
     suspend fun getAllRecipes(): MutableList<RecipeListItem> = withContext(Dispatchers.IO) {
-        mutableListOf(RecipeListItem("recipe1", "cat1"), RecipeListItem("recipe3", "cat1"))
+        val searchRecipeResult = retrofit.getRecipes().execute().body()
+        val recipes = mutableListOf<RecipeListItem>()
+
+        searchRecipeResult?.results?.sortedBy { it.title }?.forEach { resultRecipe ->
+            val recipeCategory = retrofit.getRecipe(resultRecipe.id).execute().body()
+            val recipe =
+                RecipeListItem(resultRecipe.title, convertListToString(recipeCategory?.dishTypes))
+            recipes.add(recipe)
+        }
+        recipes
+    }
+
+    private fun convertListToString(listOfStrings: List<String>?): String {
+        return listOfStrings?.toString()?.substringAfter("[")?.substringBefore("]") ?: ""
     }
 }

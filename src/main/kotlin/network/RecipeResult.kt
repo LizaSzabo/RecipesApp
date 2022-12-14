@@ -1,4 +1,4 @@
-package com.example.demo.network
+package network
 
 import com.squareup.moshi.JsonClass
 
@@ -44,23 +44,10 @@ data class Base(
     val originalId: Any?
 )
 
-@JsonClass(generateAdapter = true)
-data class Equipment1630513721(val id: Double?, val name: String?, val localizedName: String?, val image: String?)
-
-@JsonClass(generateAdapter = true)
-data class Equipment63690568(
-    val id: Double?,
-    val name: String?,
-    val localizedName: String?,
-    val image: String?,
-    val temperature: Temperature?
-)
 
 @JsonClass(generateAdapter = true)
 data class Equipment743652616(val id: Double?, val name: String?, val localizedName: String?, val image: String?)
 
-@JsonClass(generateAdapter = true)
-data class Equipment926704410(val id: Double?, val name: String?, val localizedName: String?, val image: String?)
 
 @JsonClass(generateAdapter = true)
 data class ExtendedIngredients1847277050(
@@ -81,12 +68,6 @@ data class ExtendedIngredients1847277050(
 )
 
 @JsonClass(generateAdapter = true)
-data class Ingredients2019044944(val id: Double?, val name: String?, val localizedName: String?, val image: String?)
-
-@JsonClass(generateAdapter = true)
-data class Ingredients633414983(val id: Double?, val name: String?, val localizedName: String?, val image: String?)
-
-@JsonClass(generateAdapter = true)
 data class Length(val number: Double?, val unit: String?)
 
 @JsonClass(generateAdapter = true)
@@ -103,9 +84,6 @@ data class Steps389317355(
     val equipment: List<Equipment743652616>?,
     val length: Length?
 )
-
-@JsonClass(generateAdapter = true)
-data class Temperature(val number: Double?, val unit: String?)
 
 @JsonClass(generateAdapter = true)
 data class Us(val amount: Double?, val unitShort: String?, val unitLong: String?)
