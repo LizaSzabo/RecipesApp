@@ -1,12 +1,12 @@
 package controller
 
-import RecipeListItem
+import model.RecipeListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import network.retrofit
 
 
-class MainController() {
+class MainController {
     suspend fun getAllRecipes(): MutableList<RecipeListItem> = withContext(Dispatchers.IO) {
         val searchRecipeResult = retrofit.getRecipes().execute().body()
         val recipes = mutableListOf<RecipeListItem>()

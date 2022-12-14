@@ -1,7 +1,7 @@
 package view
 
 
-import RecipeListItem
+import model.RecipeListItem
 import app.Styles
 import app.Styles.Companion.backgroundBoxColor
 import controller.MainController
