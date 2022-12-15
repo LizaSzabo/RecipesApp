@@ -9,9 +9,11 @@ import javafx.application.Platform
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
+import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import model.Ingredient
 import model.Recipe
@@ -22,78 +24,102 @@ class DetailsView(private val recipeId: String, private val recipeTitle: String)
     private var progressIndicator = progressindicator { }
     private lateinit var recipe: Recipe
     private val detailsController = DetailsController()
+    private lateinit var recipeImageView: ImageView
     private lateinit var ingredientsListView: ListView<String>
     private lateinit var instructionsLabel: Label
-    private lateinit var recipeImageView: ImageView
 
-    override val root = vbox {
-        style {
-            minWidth = 800.px
-            minHeight = 800.px
-            backgroundColor += detailsBackgroundBoxColor
-            paddingLeft = 24
-            paddingRight = 24
-        }
-        label {
+
+    override val root =
+        vbox {
             style {
                 minWidth = 800.px
-                minHeight = 36.px
-                fontSize = 20.px
-                alignment = Pos.CENTER
-                backgroundColor += detailsTitleBackgroundColor
+                minHeight = 700.px
+                backgroundColor += detailsBackgroundBoxColor
+                paddingLeft = 24
+                paddingRight = 24
             }
-            text = recipeTitle
-        }
-        hbox {
-            style {
-                minWidth = 760.px
-                alignment = Pos.CENTER
-                startMargin = 380.px
+            label {
+                style {
+                    minWidth = 800.px
+                    minHeight = 36.px
+                    fontSize = 20.px
+                    alignment = Pos.CENTER
+                    backgroundColor += detailsTitleBackgroundColor
+                }
+                text = recipeTitle
             }
-            recipeImageView = imageview() {}
-        }
-        label {
-            style {
-                minWidth = 800.px
-                minHeight = 36.px
-                fontSize = 16.px
-                paddingTop = 16
-                paddingBottom = 16
+            hbox {
+                style {
+                    maxWidth = 400.px
+                    maxHeight = 400.px
+                    paddingTop = 2
+                    paddingLeft = 200.0
+                }
+                recipeImageView = imageview() {}
             }
-            text = "Ingredients: "
-        }
-        ingredientsListView = listview {
-            style {
-                startMargin = 24.px
-                endMargin = 24.px
-                backgroundColor += darkGreen
-                baseColor = darkGreen
+            label {
+                style {
+                    minWidth = 800.px
+                    minHeight = 36.px
+                    fontSize = 16.px
+                    paddingTop = 8
+                    paddingBottom = 8
+                }
+                text = "Ingredients: "
             }
-            setMaxSize(700.0, 100.0)
-        }
-        label {
-            style {
-                minWidth = 800.px
-                minHeight = 36.px
-                fontSize = 16.px
-                paddingTop = 16
+            ingredientsListView = listview {
+                style {
+                    startMargin = 24.px
+                    endMargin = 24.px
+                    backgroundColor += darkGreen
+                    baseColor = darkGreen
+                }
+                setMaxSize(800.0, 160.0)
             }
-            text = "Instructions: "
-        }
-        instructionsLabel = label {
-            style {
-                paddingTop = 4
-                paddingBottom = 16
+
+            label {
+                style {
+                    minWidth = 800.px
+                    minHeight = 36.px
+                    fontSize = 16.px
+                    paddingTop = 16
+                    paddingBottom = 4
+                }
+                text = "Instructions: "
             }
+            scrollpane {
+                style {
+                    minHeight = 120.px
+                    backgroundColor += detailsBackgroundBoxColor
+                    baseColor = detailsBackgroundBoxColor
+                    maxWidth = 800.px
+                }
+                instructionsLabel = label {
+                    style {
+                        paddingTop = 4
+                        paddingBottom = 16
+                    }
+                }
+            }
+            hbox {
+                progressIndicator = progressindicator {
+                    style {
+                        minWidth = 760.px
+                        alignment = Pos.CENTER
+                        startMargin = 380.px
+                    }
+                }
+                progressIndicator.isVisible = true
+            }
+            addRecipeDetails()
         }
-        progressIndicator.isVisible = true
-        addRecipeDetails()
-    }
 
     private fun addRecipeDetails() {
+        progressIndicator.isVisible = true
         CoroutineScope(Dispatchers.Main).launch {
+            delay(2000)
             recipe = detailsController.getRecipeById(recipeId)
-            recipeImageView = imageview(url = recipe.image) {}
+            recipe.image?.let { recipeImageView.setData(it) }
             ingredientsListView.setData(recipe.ingredients)
             instructionsLabel.setData(recipe)
             progressIndicator.isVisible = false
@@ -104,14 +130,27 @@ class DetailsView(private val recipeId: String, private val recipeTitle: String)
 fun Label.setData(recipe: Recipe) {
     require(Platform.isFxApplicationThread()) { "TableView should only be accessed from the UI thread" }
     this.text = recipe.content
-    this.maxWidth = 764.0
+    this.minWidth = 784.0
+    this.maxWidth = 784.0
+    this.paddingLeft = 8.0
+    this.paddingRight = 8.0
+    this.paddingTop = 8.0
+    this.paddingBottom = 8.0
     this.isWrapText = true
+}
+
+fun ImageView.setData(url: String) {
+    require(Platform.isFxApplicationThread()) { "TableView should only be accessed from the UI thread" }
+    this.image = Image(url)
+    this.fitHeight = 240.0
+    this.fitWidth = 400.0
+    this.isPreserveRatio = true
 }
 
 fun ListView<String>.setData(ingredients: List<Ingredient>) {
     require(Platform.isFxApplicationThread()) { "TableView should only be accessed from the UI thread" }
     items.clear()
     ingredients.forEach { ingredient ->
-        items.add("${ingredient.name}   ${ingredient.amount} ${ingredient.unit}")
+        items.add("  ${ingredient.name}   ${ingredient.amount} ${ingredient.unit}")
     }
 }

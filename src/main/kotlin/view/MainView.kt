@@ -16,7 +16,7 @@ import model.RecipeListItem
 import tornadofx.*
 
 class RecipesListView : View() {
-    private val input = SimpleStringProperty("Enter category ")
+    private val input = SimpleStringProperty("Enter category.. ")
     private val headerView = HeaderView()
     private val mainController = MainController()
     private var recipes = mutableListOf<RecipeListItem>()
