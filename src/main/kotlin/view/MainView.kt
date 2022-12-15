@@ -1,17 +1,18 @@
 package view
 
 
-import model.RecipeListItem
 import app.Styles
 import app.Styles.Companion.backgroundBoxColor
 import controller.MainController
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
+import javafx.geometry.Pos
 import javafx.scene.control.TableView
 import javafx.scene.text.FontWeight
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import model.RecipeListItem
 import tornadofx.*
 
 class RecipesListView : View() {
@@ -20,6 +21,7 @@ class RecipesListView : View() {
     private val mainController = MainController()
     private var recipes = mutableListOf<RecipeListItem>()
     private lateinit var tableView: TableView<RecipeListItem>
+    private var progressIndicator = progressindicator { }
 
     override val root = vbox {
         style {
@@ -36,25 +38,48 @@ class RecipesListView : View() {
         tableView = tableview {
             style {
                 maxWidth = 785.px
-                minHeight = 510.px
-                maxHeight = 510.px
+                minHeight = 500.px
+                maxHeight = 500.px
             }
             items = recipes.asObservable()
 
             column("Title", RecipeListItem::title) {
                 prefWidth = 500.0
                 onDoubleClick {
-                    selectedItem?.title?.let { DetailsView(it).openWindow() }
+                    selectedItem?.title?.let { title ->
+                        selectedItem?.id?.let { id ->
+                            DetailsView(
+                                id,
+                                title
+                            ).openWindow()
+                        }
+                    }
                 }
             }
 
             column("Category", RecipeListItem::category) {
                 prefWidth = 285.0
                 onDoubleClick {
-                    selectedItem?.title?.let { DetailsView(it).openWindow() }
+                    selectedItem?.title?.let { title ->
+                        selectedItem?.id?.let { id ->
+                            DetailsView(
+                                id,
+                                title
+                            ).openWindow()
+                        }
+                    }
                 }
-
             }
+        }
+        hbox {
+            progressIndicator = progressindicator {
+                style {
+                    minWidth = 760.px
+                    alignment = Pos.CENTER
+                    startMargin = 380.px
+                }
+            }
+            progressIndicator.isVisible = true
         }
         addRecipes()
     }
@@ -64,6 +89,7 @@ class RecipesListView : View() {
             recipes = mainController.getAllRecipes()
             println(recipes)
             tableView.setData(recipes)
+            progressIndicator.isVisible = false
         }
     }
 
@@ -92,10 +118,12 @@ class RecipesListView : View() {
                             fontWeight = FontWeight.BOLD
                         }
                         action {
+                            progressIndicator.isVisible = true
                             CoroutineScope(Dispatchers.Main).launch {
                                 recipes = mainController.getRecipeByCategory(input.toString())
                                 println(recipes)
                                 tableView.setData(recipes)
+                                progressIndicator.isVisible = false
                             }
                         }
                     }

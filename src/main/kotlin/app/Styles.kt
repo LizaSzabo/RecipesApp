@@ -11,6 +11,7 @@ class Styles : Stylesheet() {
         val detailsBackgroundBoxColor = c("#baff95")
         val searchBoxColor = c("f4f7d3")
         val detailsTitleBackgroundColor = c("98ff95")
+        val darkGreen = c("209c1c")
     }
 
     init {
