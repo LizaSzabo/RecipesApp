@@ -1,6 +1,5 @@
 package view
 
-
 import app.Styles.Companion.darkGreen
 import app.Styles.Companion.detailsBackgroundBoxColor
 import app.Styles.Companion.detailsTitleBackgroundColor
@@ -19,7 +18,6 @@ import model.Ingredient
 import model.Recipe
 import tornadofx.*
 
-
 class DetailsView(private val recipeId: String, private val recipeTitle: String) : View() {
     private var progressIndicator = progressindicator { }
     private lateinit var recipe: Recipe
@@ -27,7 +25,6 @@ class DetailsView(private val recipeId: String, private val recipeTitle: String)
     private lateinit var recipeImageView: ImageView
     private lateinit var ingredientsListView: ListView<String>
     private lateinit var instructionsLabel: Label
-
 
     override val root =
         vbox {
@@ -55,7 +52,7 @@ class DetailsView(private val recipeId: String, private val recipeTitle: String)
                     paddingTop = 2
                     paddingLeft = 200.0
                 }
-                recipeImageView = imageview() {}
+                recipeImageView = imageview {}
             }
             label {
                 style {
